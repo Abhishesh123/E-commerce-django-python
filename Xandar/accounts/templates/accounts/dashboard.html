@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<body>
+
+    <!-- Start Banner Area -->
+    <section class="banner-area organic-breadcrumb">
+        <div class="container">
+            <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+                <div class="col-first">
+                    <h1>Dashboard</h1>
+                    <nav class="d-flex align-items-center">
+                        <a href="#">Home<span class="lnr lnr-arrow-right"></span></a>
+                        <a href="{% url 'accounts:dashboard' %}">Dashboard</a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Banner Area -->
+
+    <!--================Blog Categorie Area =================-->
+    <section class="blog_categorie_area" style="padding-bottom: 5px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="categories_post">
+                        <img height="230px" width="100%" src="{% static 'img/dashboard/order.jpg' %}" alt="post">
+                        <a href="{% url 'orders:ordered_items' %}">
+                            <div class="categories_details">
+                                <div class="categories_text">
+                                    <h5>Orders</h5>
+                                    <div class="border_line"></div>
+                                    <p>Dreams you achieved</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="categories_post">
+                        <img height="230px" src="{% static 'img/dashboard/cart.jpg' %}" alt="post">
+                        <a href="{% url 'operations:view_cart' %}">
+                            <div class="categories_details">
+                                <div class="categories_text">
+                                        <h5>Cart</h5>
+                                        <div class="border_line"></div>
+                                        <p>Wheels of Happiness</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="categories_post">
+                        <img height="230px" width="400px" src="{% static 'img/dashboard/wishlist.png' %}" alt="post">
+                            <a href="{% url 'operations:wishlist' %}">
+                                <div class="categories_details">
+                                    <div class="categories_text">
+                                            <h5>Wishlist</h5>
+                                    <div class="border_line"></div>
+                                    <p>Things soon to be yours</p>
+                                </div>
+                            </div>
+                            </a>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+
+    <!--================Blog Categorie Area =================-->
+<section class="blog_categorie_area" style="padding-top: 0px;">
+    <div class="container">
+        <div class="row">
+<div class="col-lg-4" align="right" style="margin-left: 190px;"><br>
+                    <div class="categories_post">
+                        <img height="230px" width="100%" src="{% static 'img/dashboard/security.jpg' %}" alt="post">
+                        <a href="{% url 'accounts:reset_password' %}">
+                            <div class="categories_details">
+                                <div class="categories_text">
+                                    <h5>Reset Password</h5>
+                                    <div class="border_line"></div>
+                                    <p>Your account, Our Responsibility</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-4"><br>
+                    <div class="categories_post">
+                        <img height="230px" width="99%" src="{% static 'img/dashboard/address.png' %}" alt="post">
+                        <a href="{% url 'orders:delivery_address' %}">
+                            <div class="categories_details">
+                                <div class="categories_text">
+                                    <h5>Address</h5>
+                                    <div class="border_line"></div>
+                                    <p>Drop my orders here</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+    </div>
+</section>
+    <!-- End footer Area -->
+
+</body>
+
+{% endblock %}
+
+{% block scroll_js %}
+<script type="text/javascript">
+    $("html,body").scrollTop(380);
+</script>
+{% endblock scroll_js%}

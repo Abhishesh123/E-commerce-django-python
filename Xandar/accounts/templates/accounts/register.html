@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+   <style>
+      /* The message box is shown when the user clicks on the password field */
+      #message {
+        display:none;
+        background: #f7f7f7;
+        color: #000;
+        position: relative;
+        padding: 10px 0px 1px 10px;
+        margin-top: 10px;
+      }
+
+      #message p {
+         margin : 8px;
+         padding: 0px 0px 0px 35px;
+         font-size: 14px;
+      }
+
+      /* Add a green text color and a checkmark when the requirements are right */
+      .valid {
+        color: green;
+      }
+
+      .valid:before {
+        position: relative;
+        left: -35px;
+        content: "✔";
+      }
+
+      /* Add a red text color and an "x" when the requirements are wrong */
+      .invalid {
+        color: red;
+      }
+
+      .invalid:before {
+        position: relative;
+        left: -35px;
+        content: "✖";
+      }
+   </style>
+
+   <style>
+      .alert {
+        padding: 20px;
+        background-color: #f44336;
+        color: white;
+        transition: opacity 0.6s;
+      }
+
+      .closebtn {
+        margin-left: 15px;
+        color: white;
+        font-weight: bold;
+        float: right;
+        font-size: 22px;
+        line-height: 20px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      .closebtn:hover {
+        color: black;
+      }
+   </style>
+
+   <!-- Start Banner Area -->
+   <section class="banner-area organic-breadcrumb">
+      <div class="container">
+         <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+               <h1>Register New User</h1>
+               <nav class="d-flex align-items-center">
+                  <a href="">Home<span class="lnr lnr-arrow-right"></span></a>
+                  <a href="{% url 'accounts:registration' %}">Register New User</a>
+               </nav>
+            </div>
+         </div>
+      </div>
+   </section>
+   <!-- End Banner Area -->
+
+   <!--================Login Box Area =================-->
+   <section class="login_box_area section_gap">
+      <center>
+         <div class="col-lg-6">
+               <div class="login_form_inner" style="margin-top:0px">
+                  <h2>Registration Form</h2><br>
+                  {% if message %}
+                  <div class="alert">
+                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                        {{message}}
+                  </div>
+                  {% endif %}
+
+                  <form class="row login_form" method="POST" id="contactForm">
+                     {% csrf_token %}
+                     <span class="col-md-12 form-group" style="color:red;">* Fields are mandatory</span>
+                     <div class="col-md-12 form-group">
+                        <input type="text" class="form-control is-valid" id="fn" name="first_name"
+                              placeholder="First Name *" onfocus="this.placeholder = 'First Name *'"
+                              data-validation-help="Do not add numbers or special characters"
+                              onblur="this.placeholder = 'First Name'" pattern="^[a-zA-Z\s]+$"
+                              maxlength="30" required>
+                     </div>
+                     <div class="col-md-12 form-group">
+                        <input type="text" class="form-control is-valid" id="ln" name="last_name"
+                              placeholder="Last Name" onfocus="this.placeholder = 'Last Name'"
+                              data-validation-help="Do not add numbers or special characters"
+                              onblur="this.placeholder = 'Last Name'" pattern="^[a-zA-Z\s]+$"
+                              maxlength="20">
+                     </div>
+                     <div class="col-md-12 form-group">
+                        <input type="email" class="form-control is-valid" id="name" name="email"
+                              placeholder="E-mail *" onfocus="this.placeholder = 'E-mail *'"
+                              onblur="this.placeholder = 'E-mail'" maxlength="50" required
+                              data-validation="email" data-validation-error-msg="Enter a valid e-mail. Eg: abc@gmail.com">
+                     </div>
+                     <div class="col-md-12 form-group">
+                        <input type="Password" class="form-control is-valid" id="txtPassword" name="password1"
+                              placeholder="Password *" onfocus="this.placeholder = 'Password *'"
+                              onblur="this.placeholder = 'Password *'" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                              maxlength="15" required>
+                        <div id="message" align="left">
+                           <h5>Password must contain the following:</h5>
+                           <p id="letter" class="invalid">A lowercase letter</p>
+                           <p id="capital" class="invalid">A capital (uppercase) letter</p>
+                           <p id="number" class="invalid">A number</p>
+                           <p id="length" class="invalid">Minimum 8 characters</p>
+                        </div>
+                     </div>
+                     <div class="col-md-12 form-group">
+                        <input type="Password" class="form-control is-valid" id="txtConfirmPassword"
+                              name="password2" placeholder="Confirm Password *" onfocus="this.placeholder = 'Confirm Password *'"
+                              data-validation="confirmation" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                              onblur="this.placeholder = 'Confirm Password *'" maxlength="15" required>
+                     </div>
+                     <div class="col-md-12 is-valid" align="left">
+                        <br><input type="radio" name="gender" value="True" checked> Male
+                        <input style="margin-left:150px;" type="radio" name="gender" value="False"> Female<br><br>
+                     </div>
+                     <div class="col-md-12 form-group">
+                        <input type="text" class="form-control is-valid" id="name" name="phone_number"
+                              placeholder="Phone Number *" onfocus="this.placeholder = 'Phone Number *'"
+                              onblur="this.placeholder = 'Phone Number'" pattern="[789][0-9]{9}"
+                              data-validation-help="Number must be in Indian format +91-(AAAAA BBBBB)"
+                              maxlength="10" required>
+                     </div>
+                     <div class="col-md-12 form-group is-valid">
+                        <button type="submit" id="btnSubmit" value="submit"
+                              class="primary-btn">Register</button>
+                     </div>
+                  </form>
+                  <div>
+                     Already A User?? <a href="{% url 'accounts:login_app' %}">Sign In</a>
+                  </div><br>
+               </div>
+            </div>
+      </center>
+
+   </section>
+   <!--================End Login Box Area =================-->
+
+
+   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
+
+   <script>
+      $.validate();
+      $('#my-textarea').restrictLength( $('#max-length-element') );
+   </script>
+   <script>
+      var myInput = document.getElementById("txtPassword");
+      var letter = document.getElementById("letter");
+      var capital = document.getElementById("capital");
+      var number = document.getElementById("number");
+      var length = document.getElementById("length");
+
+      // When the user clicks on the password field, show the message box
+      myInput.onfocus = function() {
+        document.getElementById("message").style.display = "block";
+      }
+
+      // When the user clicks outside of the password field, hide the message box
+      myInput.onblur = function() {
+        document.getElementById("message").style.display = "none";
+      }
+
+      // When the user starts to type something inside the password field
+      myInput.onkeyup = function() {
+        // Validate lowercase letters
+        var lowerCaseLetters = /[a-z]/g;
+        if(myInput.value.match(lowerCaseLetters)) {
+         letter.classList.remove("invalid");
+         letter.classList.add("valid");
+        } else {
+         letter.classList.remove("valid");
+         letter.classList.add("invalid");
+        }
+
+        // Validate capital letters
+        var upperCaseLetters = /[A-Z]/g;
+        if(myInput.value.match(upperCaseLetters)) {
+         capital.classList.remove("invalid");
+         capital.classList.add("valid");
+        } else {
+         capital.classList.remove("valid");
+         capital.classList.add("invalid");
+        }
+
+        // Validate numbers
+        var numbers = /[0-9]/g;
+        if(myInput.value.match(numbers)) {
+         number.classList.remove("invalid");
+         number.classList.add("valid");
+        } else {
+         number.classList.remove("valid");
+         number.classList.add("invalid");
+        }
+
+        // Validate length
+        if(myInput.value.length >= 8) {
+         length.classList.remove("invalid");
+         length.classList.add("valid");
+        } else {
+         length.classList.remove("valid");
+         length.classList.add("invalid");
+        }
+      }
+   </script>
+
+{% endblock %}
+{% block scroll_js %}
+<script type="text/javascript">
+    $("html,body").scrollTop(400);
+</script>
+{% endblock scroll_js%}

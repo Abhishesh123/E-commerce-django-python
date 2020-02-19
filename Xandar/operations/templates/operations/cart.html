@@ -1,0 +1,308 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load arith_tags %}
+{% block content %}
+
+    <body>
+
+
+    <!-- Start Banner Area -->
+    <section class="banner-area organic-breadcrumb">
+        <div class="container">
+            <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+                <div class="col-first">
+                    <h1>Shopping Cart</h1>
+                    <nav class="d-flex align-items-center">
+                        <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
+                        <a href="category.html">Cart</a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Banner Area -->
+
+    <!--================Cart Area =================-->
+
+
+    <section class="cart-area">
+       <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+<br>
+                {% if errors %}
+                    <div class="row" style="background-color:#f7f7f7;">
+                        <div class="col-lg-12 alert">
+                            <div style="margin-top:10px; font-size:25px; color:black;" align="center">{{errors}}</div>
+                        </div>
+                    </div><br>
+                {% endif %}
+
+
+                {% if messages %}
+                    {% for msg in messages %}
+                    <div class="row" style="background-color:#f7f7f7;">
+                        <div class="col-lg-12 alert ">
+                            <div style="margin-top:10px; font-size:25px; color:black;" align="center">{{msg}}</div>
+                        </div>
+                    </div><br>
+                    {% endfor %}
+                {% endif %}
+
+
+
+
+                {% if not errors %}
+
+                <br>
+                <div align="center" class="row" style="padding:10px 0px 5px 0px;">
+                    <div style=" color:#ff6c00; font-weight: 500; font-size:18px;" class="col-lg-2">Image</div>
+                    <div style=" color:#ff6c00; font-weight: 500; font-size:18px;" class="col-lg-2">Product</div>
+                    <div style=" color:#ff6c00; font-weight: 500; font-size:18px;" class="col-lg-2">Quantity</div>
+                    <div style=" color:#ff6c00; font-weight: 500; font-size:18px;" class="col-lg-2">Unit Price</div>
+                    <div style=" color:#ff6c00; font-weight: 500; font-size:18px;" class="col-lg-2">Price</div>
+                    <div class="col-lg-2"></div>
+                </div><div style="margin-top:10px"></div>
+                {% endif %}
+
+                {% for item in items %}
+                <div class="row" style="background-color:#f7f7f7;">
+                    <div class="col-lg-2 col-sm-2">
+                        <div class="" style="text-align:center; padding: 13px 0px 13px 0px;">
+                            <a href="#">
+                            <img class="img-fluid" src="{{item.product_img.image.url}}" width="150px" height="150px">
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-2 col-sm-2">
+                        <div align="center" style="margin-top:70px;">
+                        {{item.product.name}}
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-sm-2" style="float:left">
+                       <div class="product_count" style="float:left;width:50%;margin-top:65px">
+                           <select name="qty" id="{{ item.id }}" class="quantity-dropdown">
+                                        {% if item.quantity == 1%}
+                                        <option selected>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        {% elif item.quantity == 2 %}
+                                        <option>1</option>
+                                        <option selected>2</option>
+                                        <option >3</option>
+                                        {% elif item.quantity == 3 %}
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option selected>3</option>
+                                        {% endif %}
+                                    </select>
+                       </div>
+                        <div style="float:right;width:50%;margin-top:65px"><button style="" type="button" value="Update" class="btn btn-primary" onclick="show({{item.id}},{{item.product.id}}, {{item.unit_price}})" style="float:left">Update</button></div>
+
+<!--                           <button onclick="show()"></button>-->
+
+                       </div>
+
+
+
+                    <div class="col-lg-2 col-sm-2">
+                        <div align="center" style="margin-top:70px;">
+                        ₹ {{ item.unit_price}}
+                        </div>
+                    </div>
+
+                    <div class="col-lg-2 col-sm-2">
+                        <div align="center" style="margin-top:70px;" id="{{item.quantity}}">
+                        ₹{% multiply item.product.price item.quantity%}
+                        </div>
+                    </div>
+
+                    <div class="col-lg-2 col-sm-2">
+                        <div align="center" style="margin-top:65px;">
+                           <a>
+                               <button type="button" value="Remove" class="btn btn-danger" onclick="remove_item({{item.product.id}})">Remove</button>
+                           </a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div style="margin-top:10px"></div>
+            {% endfor %}
+
+                {% if not errors %}
+                <br>
+                <div class="row">
+                    <div class="col-lg-2"></div>
+                    <div class="col-lg-1"></div>
+                    <div class="col-lg-3"></div>
+                    <div align="center" class="col-lg-2" style=" color:#ff6c00; font-weight: 500; font-size:16px;">Total</div>
+                    <div align="center" class="col-lg-2" style=" color:#ff6c00; font-weight: 500; font-size:16px;" id="total_checkout_price">₹ {{total_price }}</div>
+                    <div class="col-lg-2"></div>
+                </div>
+                <br><br>
+                {% endif %}
+            </div>
+
+
+
+            <div class="checkout_btn_inner d-flex align-items-center" style="margin-left:700px; padding-bottom:20px;">
+                <a href="{% url 'index' %}"><button class="primary-btn">Continue Shopping</button></a>&nbsp;&nbsp;&nbsp;<br>
+                {% if not errors %}
+                {% if not messages %}
+                   <button class="primary-btn" onclick="go_to_cart()">Proceed to Checkout</button>
+                {% endif %}
+                {% endif %}
+            </div>
+        </div><br>
+    </div>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!--================End Cart Area =================-->
+
+    <script src="{% static 'js/vendor/jquery-2.2.4.min.js' %}"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+    crossorigin="anonymous"></script>
+   <script src="{% static 'js/vendor/bootstrap.min.js' %}"></script>
+   <script src="{% static 'js/jquery.ajaxchimp.min.js' %}"></script>
+   <script src="{% static 'js/jquery.nice-select.min.js' %}"></script>
+   <script src="{% static 'js/jquery.sticky.js' %}"></script>
+    <script src="{% static 'js/nouislider.min.js' %}"></script>
+   <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+   <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+   <!--gmaps Js-->
+   <script src="js/gmaps.min.js"></script>
+   <script src="js/main.js"></script>
+    <script
+           src="https://code.jquery.com/jquery-3.4.1.min.js"
+           integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+           crossorigin="anonymous"></script>
+    <script>
+    function go_to_cart()
+    {
+    console.log()
+        var token = '{% csrf_token %}'
+        $.ajax({
+         headers: {"X-CSRFToken": token},
+         url: '/orders/',
+         data: {},
+         type: 'GET',
+         success: function(response) {
+            window.location.href = '{% url 'orders:checkout' %}'
+
+         },
+         error: function(error) {
+            console.log(error)
+         }
+});
+}
+    function show(item_id, item_product_id, item_unit_price)
+    {
+            console.log(item_id)
+            console.log($('#'+item_id).val())
+            console.log($( "#"+item_id+" option:selected" ).text())
+            quantity = $('#'+item_id).val()
+            var token = '{{ csrf_token }}'
+	        $.ajax({
+			headers: {"X-CSRFToken": token},
+			url: '/operations/cart/update/'+item_product_id+'/',
+			data: {'qty':quantity},
+			type: 'POST',
+			success: function(response){
+            $('#total-screen').css('opacity',0.2)
+$('#response_message').text(response['message'])
+if(response['message'] == 'Item In Your Cart Updated successfully')
+{
+    $('#response_image').attr('src',"{% static '/img/happy_update.gif'%}")
+}
+else
+{
+    $('#response_image').attr('src',"{% static '/img/sad_update.gif'%}")
+}
+$('#myModal').fadeIn('slow')
+$("#myModal").delay(1500).fadeOut('slow', function()
+{
+$('#total-screen').css('opacity',1)
+})
+total_price = 0
+            '{% for item in items %}'
+                console.log($('#'+{{item.quantity}}).text())
+                if(response['item_id'] == {{item.id}})
+                {
+                    new_quantity = parseInt(response['item_quantity'])
+                    old_price = parseInt({{item.unit_price}})
+                    new_price = new_quantity * old_price
+                    total_price = total_price+new_price
+                    $("#"+{{item.quantity}}).text("₹"+ new_price)
+                }
+                else
+                {
+                    total_price = total_price + {{item.unit_price}}*{{item.quantity}}
+                }
+            '{% endfor %}'
+            $('#total_checkout_price').text('₹'+total_price)
+			},error:function(error)
+			{
+			    console.log(error)
+			}
+			})
+
+    }
+    function remove_item(item_product_id)
+    {
+        var token = '{{ csrf_token }}'
+        $.ajax({
+			headers: {"X-CSRFToken": token},
+			url: '/operations/cart/delete/'+item_product_id+'/',
+			data: {},
+			type: 'POST',
+			beforeSend: function()
+         {
+            $('#total-screen').css('opacity',0.2)
+            $('#myLoader').removeAttr('hidden')
+            setTimeout(function()
+            {
+                $('#total-screen').css('opacity',1)
+                $("#myloader").hide()
+            }
+            ,3000)
+
+         },
+			success: setTimeout(function(response){
+			window.location.href = "{% url 'operations:view_cart'%}"
+			},3000)
+			})
+    }
+
+    </script>
+</body>
+
+
+{% endblock %}
+
+{% block scroll_js %}
+<script type="text/javascript">
+    $("html,body").scrollTop(300);
+</script>
+{% endblock scroll_js %}

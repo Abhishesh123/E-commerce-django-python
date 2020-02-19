@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<body>
+
+	<!-- Start Banner Area -->
+	<section class="banner-area organic-breadcrumb">
+		<div class="container">
+			<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+				<div class="col-first">
+					<h1>Orders</h1>
+					<nav class="d-flex align-items-center">
+						<a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
+						<a href="#">Shop<span class="lnr lnr-arrow-right"></span></a>
+						<a href="category.html">Fashon Category</a>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</section><br>
+	<!-- End Banner Area -->
+
+	<section class="cart-area">
+	<div class="container" style="background-color:#f7f7f7;">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="row">
+				<div class="col-lg-4 col-sm-6" style="margin-bottom: 13px;">
+					<div class="" style="text-align:center; padding: 13px 0px 0px 0px;">
+						<a href="{% url 'products:product_detail' 1 %}">
+							<img style="border: 2px solid black; border-radius:10px;"
+								 height="250px" width="250px" class="img-fluid" src="{% static 'img/product/p1.jpg' %}" alt="">
+						</a>
+					</div>
+				</div>
+				<div class="col-lg-4 col-sm-6">
+					<div class="single-product" style="padding: 20px 0px 0px 0px;">
+						<div class="product-details">
+							<h3>Addidas New Hammer sole
+								for Sports person</h3><hr color="#777777">
+							<div class="price">
+								<span>Price : </span>
+								<span>$150.00</span>
+							</div>
+							<div class="price" style="position: absolute;">
+								<h6>Description</h6>
+								<div>Detailed Description</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4 col-sm-6" style="padding: 20px 0px 0px 0px;">
+						<div class="button-group-area mt-40" style="text-align:center">
+							<a href="{% url 'operations:track' %}"><button type="button" class="btn btn-warning" style="margin-top:50px; width:70%;">Track Item</button></a><br><br>
+							<a href="{% url 'products:product_detail' 1 %}">
+								<button type="button" class="btn btn-info" style="width:70%;">Post Review</button></a>
+								<br><br>
+							<button type="button" class="btn btn-danger" style="width:70%;">Cancel Item</button><br>
+						</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div><br>
+	</section>
+
+
+</body>
+
+
+{% endblock %}
+
+{% block scroll_js %}
+<script type="text/javascript">
+    $("html,body").scrollTop(320);
+</script>
+{% endblock scroll_js%}

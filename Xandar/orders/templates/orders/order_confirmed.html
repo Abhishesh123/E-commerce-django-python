@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load multiply_filter %}
+{% block content %}
+	<!-- Start Banner Area -->
+	<section class="banner-area organic-breadcrumb">
+		<div class="container">
+			<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+				<div class="col-first">
+					<h1>Confirmation</h1>
+					<nav class="d-flex align-items-center">
+						<a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
+						<a href="category.html">Confirmation</a>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- End Banner Area -->
+
+	<!--================Order Details Area =================-->
+	<section class="order_details section_gap">
+		<div class="container">
+			<div>
+			<center><h4  style="color:green">Thank you So Much. Your order has been received.</h4>
+            <a class="primary-btn" href="{% url 'index' %}" style="margin-top:20px;margin-bottom:40px">Continue Shopping</a></center>
+</div>
+
+			<div class="row order_d_inner">
+				<div class="col-lg-4">
+					<div class="details_item">
+						<h4>Order Info</h4>
+						<ul class="list">
+							<li><a href="#"><span>Order number</span> : 60235</a></li>
+							<li><a href="#"><span>Total (After Discount)</span> : {{total}}</a></li>
+							<li><a href="#"><span>Payment method</span> : {{payment}}</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-lg-4">
+					<div class="details_item">
+						<h4>Billing Address</h4>
+						<ul class="list">
+							<li><a href="#"><span>Address</span>: {{street_address}}</a></li>
+							<li><a href="#"><span>City</span>: {{city}}</a></li>
+                            <li><a href="#"><span>State</span> : {{state}}</a></li>
+							<li><a href="#"><span>Country</span>: India</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-lg-4">
+					<div class="details_item">
+						<h4>Receiver's Information</h4>
+						<ul class="list">
+							<li><a href="#"><span>Name</span> : {{receiver_name}}</a></li>
+							<li><a href="#"><span>Phone Number</span> : {{phone_number}}</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="order_details_table">
+				<h2>Order Details</h2>
+				<div class="table-responsive">
+					<table class="table">
+						<thead>
+							<tr>
+								<th scope="col">Product</th>
+								<th scope="col">Quantity</th>
+								<th scope="col">Total</th>
+							</tr>
+						</thead>
+						<tbody>
+                        {% for order in orders %}
+							<tr>
+								<td>
+									<p>{{order.product.name}}</p>
+								</td>
+								<td>
+									<h5>x {{order.quantity}}</h5>
+								</td>
+								<td>
+									<p>₹{% multiply order.product.price 1%}</p>
+								</td>
+							</tr>
+                        {% endfor %}
+							<tr>
+								<td>
+									<h4>Total</h4>
+								</td>
+								<td>
+									<h5></h5>
+								</td>
+								<td>
+									<p>{{total}}</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}
+{% block scroll_js %}
+<script type="text/javascript">
+        $("html,body").scrollTop(320);
+</script>
+{% endblock scroll_js %}

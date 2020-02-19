@@ -1,0 +1,471 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load arith_tags %}
+{% block content %}
+<!-- Start Banner Area -->
+<section class="banner-area organic-breadcrumb">
+        <div class="container">
+            <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+                <div class="col-first">
+                    <h1>Shop</h1>
+                    <nav class="d-flex align-items-center">
+                        <a href="{% url 'index' %}">Home<span class="lnr lnr-arrow-right"></span></a>
+                        <a href="#">Product List</a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+<div class="container">
+<div class="row">
+<div class="col-xl-3 col-lg-4 col-md-5">
+<div class="sidebar-categories" style="padding-top: 30px">
+<div class="head" style="line-height:45px">Browse</div>
+<ul class="main-categories">
+<li class="main-nav-list"><a data-toggle="collapse" href="#fruitsVegetable" aria-expanded="false" aria-controls="fruitsVegetable"><span
+        class="lnr lnr-arrow-right"></span><span id="category_value"></span><span class="number"></span></a>
+<ul class="collapse" id="fruitsVegetable" data-toggle="collapse" aria-expanded="false" aria-controls="fruitsVegetable">
+    {% if sub_category %}
+    {% for sub_categories in sub_category %}
+    <li class="main-nav-list child" onclick="call_url_general('sub','{{sub_categories}}')"><a id="call_sub_btn">{{sub_categories}}</a></li>
+    {% endfor %}
+    {% elif sub_category_all%}
+    {% for sub_categories in sub_category_all %}
+        <li class="main-nav-list child"><a href="/product/category={{sub_categories}}">{{sub_categories}}</a></li>
+    {% endfor %}
+    {% else %}
+        <li class="main-nav-list child"><a href="#">No SubCategories Found</a></li>
+
+    {% endif %}
+</ul>
+</li>
+    {% if not no_category %}
+        <li class="main-nav-list"><a data-toggle="collapse" href="#meatFish" aria-expanded="false" aria-controls="meatFish"><span
+class="lnr lnr-arrow-right"></span>By Price<span class="number">({{product_count}})</span></a>
+<ul class="collapse" id="meatFish" data-toggle="collapse" aria-expanded="false" aria-controls="meatFish">
+<li class="main-nav-list child"><a onclick="call_url_price_both('price_lte','price_gte',500,'None')">Price > 500</a></li>
+<li class="main-nav-list child"><a onclick="call_url_price_both('price_lte','price_gte',500,1000)">500 < Price < 1000</a></li>
+<li class="main-nav-list child"><a onclick="call_url_price_both('price_lte','price_gte',1000,2000)">1000 < Price < 2000</a></li>
+    <li class="main-nav-list child"><a onclick="call_url_price_both('price_lte','price_gte',2000,3000)">2000 < Price < 3000</a></li>
+    {% endif %}
+</ul>
+</li>
+</ul>
+</div>
+    {% if not no_category %}
+<div class="sidebar-filter mt-50">
+<div class="top-filter-head" style="line-height:45px">Product Filters</div>
+<div class="common-filter">
+<div class="head">Brands</div>
+<form action="#">
+<ul style="overflow-y: scroll;overflow-x: hidden">
+    <div style="width:200px;height:200px">
+    {% for brand in attributes %}
+
+        <li class="filter-list" onclick="call_url_general('brand','{{brand}}')"><input class="pixel-radio" type="button" id="{{brand}}" name="brand"><label for="{{brand}}">{{brand}}</label></li>
+    {% empty %}
+            <li class="filter-list"><input class="pixel-radio" type="button" name="brand"><label for="">No Brands Available</label></li>
+    {% endfor %}
+            </div>
+</ul>
+</form>
+</div>
+<div class="common-filter">
+<div class="head">Color</div>
+<form action="#">
+<ul style="overflow-y: scroll;overflow-x: hidden">
+    <div style="width:200px;height:200px">
+    {% for color in colors %}
+<li class="filter-list" onclick="call_url_general('color','{{color}}')"><input class="pixel-radio" type="radio" id="{{color}}" name="color"><label for="{{color}}">{{color}}</label></li>
+<!--<li class="filter-list"><input class="pixel-radio" type="radio" id="balckleather" name="color"><label for="balckleather">Black-->
+<!--Leather<span>(29)</span></label></li>-->
+<!--<li class="filter-list"><input class="pixel-radio" type="radio" id="blackred" name="color"><label for="blackred">Black-->
+<!--with red<span>(19)</span></label></li>-->
+<!--<li class="filter-list"><input class="pixel-radio" type="radio" id="gold" name="color"><label for="gold">Gold<span>(19)</span></label></li>-->
+<!--<li class="filter-list"><input class="pixel-radio" type="radio" id="spacegrey" name="color"><label for="spacegrey">Spacegrey<span>(19)</span></label></li>-->
+    {% empty %}
+<li class="filter-list"><input class="pixel-radio" type="radio"  name="color"><label for="">No Color Available</label></li>
+    {% endfor %}
+    </div>
+</ul>
+</form>
+</div>
+<!-- <div class="common-filter">
+<div class="head">Price</div>
+<div class="price-range-area">
+<div id="price-range"></div>
+<div class="value-wrapper d-flex">
+<div class="price">Price:</div>
+<span>$</span>
+<div id="lower-value"></div>
+<div class="to">to</div>
+<span>$</span>
+<div id="upper-value"></div>
+</div>
+</div>
+</div> -->
+</div>
+    {% endif %}
+</div>
+<div class="col-xl-9 col-lg-8 col-md-7">
+<!-- Start Filter Bar -->
+<!-- <div class="filter-bar d-flex flex-wrap align-items-center">
+<div class="sorting">
+<select>
+<option value="1">Default sorting</option>
+<option value="1">Default sorting</option>
+<option value="1">Default sorting</option>
+</select>
+</div>
+<div class="sorting mr-auto">
+<select>
+<option value="1">Show 12</option>
+<option value="1">Show 12</option>
+<option value="1">Show 12</option>
+</select>
+</div>
+<div class="pagination">
+<a href="#" class="prev-arrow"><i class="fa fa-long-arrow-left" aria-hidden="true"></i></a>
+<a href="#" class="active">1</a>
+<a href="#">2</a>
+<a href="#">3</a>
+<a href="#" class="dot-dot"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
+<a href="#">6</a>
+<a href="#" class="next-arrow"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+</div>
+</div> -->
+<!-- End Filter Bar -->
+<!-- Start Best Seller -->
+<section class="lattest-product-area pb-40 category-list">
+    {% if tags %}
+    <div class="row" style="margin-top:0px;padding-top:30px;padding-left:15px">
+        {% for tag in tags %}
+        <span class="btn" style="color:white;margin-right:10px;border-radius:6%;background:#828bb3;">{{tag}}
+    <a href="" style="float:right;color:white" class="close-buttons" id="{{tag}}">&nbsp;&nbsp;X</a>
+</span>
+        {% endfor %}
+        <span class="btn" style="color:white;margin-right:5px;width:100px;border-radius:6%;background:#828bb3;">
+    <a href="" style="color:white" id="clear-all-btn">Clear All</a>
+</span>
+    </div>
+    {% else %}
+    <div class="row" style="margin-top:0px">
+    </div>
+    {% endif %}
+<div class="row">
+<!-- single product -->
+{% for product in object_list %}
+<div class="col-lg-4 col-md-6">
+<div class="single-product">
+<a href="{% url 'products:product_detail' product.slug %}">
+<img class="img-fluid" src="{{ product.image.url }}" alt="" style="position: relative;
+                                                                   width: 400px;
+                                                                   height: 200px;
+                                                                   background-position: 50% 50%;
+                                                                   background-repeat: no-repeat;
+                                                                   background-size: cover;
+                                                                   object-fit: contain;">
+</a>
+<div class="product-details">
+<h6>{{ product.name }}</h6>
+<div class="price">
+<h6>&#x20B9; {{ product.price }}</h6>
+<h6 class="l-through">&#x20B9; 8999</h6>
+</div>
+<div class="prd-bottom">
+<a class="social-info" onclick="add_cart({{product.id}})">
+<span class="ti-bag"></span>
+<p class="hover-text">add to bag</p>
+</a>
+<a class="social-info" onclick="add_function({{product.id}})">
+<span class="lnr lnr-heart"></span>
+<p class="hover-text">Wishlist</p>
+</a>
+<a href="{% url 'products:product_detail' product.slug %}" class="social-info">
+<span class="lnr lnr-move"></span>
+<p class="hover-text">view more</p>
+</a>
+</div>
+</div>
+</div>
+</div>
+{% endfor %}
+    {% for product in filtered_item %}
+    <div class="col-lg-4 col-md-6">
+<div class="single-product">
+<a href="{% url 'products:product_detail' product.slug %}">
+<img class="img-fluid" src="{{ product.productimage_set.all.0.image.url }}" alt="" style="width: 255px; height: 255px">
+</a>
+<div class="product-details">
+<h6>{{ product.name }}</h6>
+<div class="price">
+<h6>&#x20B9; {{ product.price }}</h6>
+<h6 class="l-through">&#x20B9; 8999</h6>
+</div>
+<div class="prd-bottom">
+<a class="social-info" onclick="add_cart({{product.id}})">
+<span class="ti-bag"></span>
+<p class="hover-text">add to bag</p>
+</a>
+<a class="social-info" onclick="add_function({{product.id}})">
+<span class="lnr lnr-heart"></span>
+<p class="hover-text">Wishlist</p>
+</a>
+<a href="{% url 'products:product_detail' product.slug %}" class="social-info">
+<span class="lnr lnr-move"></span>
+<p class="hover-text">view more</p>
+</a>
+</div>
+</div>
+</div>
+</div>
+    {% empty %}
+    {% if messages %}
+    {% for msg in messages %}
+    <h1><div class="alert">{{msg}}</div></h1>
+    {% endfor %}
+    {% endif %}
+    {% endfor %}
+</div>
+</section>
+<!-- End Best Seller -->
+<!-- Start Filter Bar -->
+{% include 'paginate.html' %}
+<!-- End Filter Bar -->
+</div>
+</div>
+</div>
+<br>
+<br>
+    </div>
+<script
+           src="https://code.jquery.com/jquery-3.4.1.min.js"
+           integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+           crossorigin="anonymous"></script>
+<script>
+    url = window.location.href.split("=")
+    category = url[1].split('&&')[0]
+    $('#category_value').text(category)
+</script>
+<script>
+$('#clear-all-btn').click(function(event){
+event.preventDefault()
+    old_url = window.location.href.split('&&')[0]
+    window.location.href = old_url
+})
+
+$('#call_sub_btn').click(function(event){
+    event.preventDefault()
+})
+function call_url_general(tag, value)
+{
+    count=0
+    new_url = ''
+    old_url = window.location.href.split('&&')
+    for(i=0;i<old_url.length;i++)
+    {
+        url_split = old_url[i].split('=')
+        if(url_split[0] == tag)
+           {
+            old_url[i] = tag+'='+value
+            new_url = old_url.join('&&')
+            count=1
+           }
+    }
+    if (count==1)
+    {
+        window.location.href=new_url
+    }
+    else
+    {
+        window.location.href = window.location.href+'&&'+tag+'='+value
+    }
+}
+
+function call_url_price_both(tag1,tag2, value1, value2)
+{
+
+flag1=false
+    flag2=false
+    console.log(window.location.href)
+    console.log(tag1)
+    console.log(tag2)
+    console.log(value1)
+    console.log(value2)
+    splits = window.location.href.split('&&')
+    for(i=0;i<splits.length;i++)
+    {
+        value = splits[i].split('=')
+        if(value[0] == 'price_lte')
+        {
+            flag1=true
+        }
+        if(value[0] == 'price_gte')
+        {
+            flag2=true
+        }
+    }
+    if(flag1 == true && flag2==false)
+    {
+        splits = window.location.href.split('&&')
+        for(i=0;i<splits.length;i++)
+        {
+            value = splits[i].split('=')
+            if(value[0] == 'price_lte')
+            {
+                value[1]=value1
+                value = value.join('=')
+                splits[i] = value
+            }
+        }
+        url = splits.join('&&')
+        url = url+'&&price_gte='+value2
+        window.location.href = url
+    }
+    if(flag1 == false && flag2 == true)
+    {
+
+        splits = window.location.href.split('&&')
+        for(i=0;i<splits.length;i++)
+        {
+            value = splits[i].split('=')
+            if(value[0] == 'price_gte')
+            {
+                value[1]=value1
+                value = value.join('=')
+                splits[i] = value
+            }
+        }
+        url = splits.join('&&')
+        url = url+'&&price_lte='+value2
+        window.location.href = url
+    }
+    if(flag1 == true && flag2 == true)
+    {
+        splits = window.location.href.split('&&')
+        for(i=0;i<splits.length;i++)
+        {
+            value = splits[i].split('=')
+            if(value[0] == 'price_gte')
+            {
+                value[1] = value2
+                value = value.join('=')
+                splits[i] = value
+            }
+            if(value[0] == 'price_lte')
+            {
+                value[1] = value1
+                value = value.join('=')
+                splits[i] = value
+            }
+        }
+        url = splits.join('&&')
+
+    }
+    if(flag1 == false && flag2 == false)
+    {
+        window.location.href = window.location.href+'&&price_lte='+value1+'&&price_gte='+value2
+    }
+
+
+}
+
+function call_url_for_brand(brand_name)
+{
+    console.log(brand_name)
+}
+$('.close-buttons').click(function(event)
+{
+    result=[]
+    event.preventDefault()
+    filters = window.location.href.split('&&')
+    for (i=1;i<filters.length;i++)
+    {
+        filter_value = filters[i].split('=')[1]
+        if(filter_value == this.id)
+        {
+result = filters.filter(function(elem){
+   return elem != filters[i];
+});
+        }
+    }
+    new_url = result.join('&&')
+    window.location.href = new_url
+})
+function clear_filter(tag)
+{
+    console.log(tag)
+}
+function call_url(amount)
+{
+    current_url = window.location.href.split("&&")[0]
+    window.location.href = current_url+'&&price='+amount
+}
+function add_function(object_id)
+{
+var token = '{{ csrf_token }}'
+$.ajax({
+headers: {"X-CSRFToken": token},
+url: '/product/add/'+object_id,
+data: {'quantity':1,
+'button':'wishlist'},
+type: 'GET',
+success: function(response) {
+$('#total-screen').css('opacity',0.2)
+$('#response_message').text(response)
+if(response == 'Item Added To Wishlist Successfully')
+{
+    $('#response_image').attr('src',"{% static '/img/true.gif'%}")
+}
+else
+{
+    $('#response_image').attr('src',"{% static '/img/false.gif'%}")
+}
+$('#myModal').fadeIn('slow')
+$("#myModal").delay(1500).fadeOut('slow', function()
+{
+$('#total-screen').css('opacity',1)
+})
+},
+error: function(error) {
+console.log(error)
+}
+});
+}
+function add_cart(object_id)
+{
+    var token = '{{ csrf_token }}'
+$.ajax({
+url: '/operations/cart/add/'+object_id+'/',
+data: {},
+type: 'GET',
+success: function(response) {
+$('#total-screen').css('opacity',0.2)
+$('#response_message').text(response)
+if(response == 'Item Added To Cart Successfully')
+{
+    $('#response_image').attr('src',"{% static '/img/true.gif'%}")
+    $('#cart_count').text(parseInt($('#cart_count').text())+1)
+}
+else
+{
+    $('#response_image').attr('src',"{% static '/img/false.gif'%}")
+}
+$('#myModal').fadeIn('slow')
+$("#myModal").delay(1500).fadeOut('slow', function()
+{
+$('#total-screen').css('opacity',1)
+})
+},
+error: function(error) {
+console.log(error)
+}
+});
+}
+</script>
+{% endblock content %}
+{% block scroll_js %}
+<script type="text/javascript">
+    $("html,body").scrollTop(320);
+</script>
+{% endblock scroll_js %}

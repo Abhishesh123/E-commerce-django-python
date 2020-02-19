@@ -1,0 +1,495 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load day_difference %}
+
+{% block content %}
+	<!-- Start Banner Area -->
+	<section class="banner-area organic-breadcrumb">
+		<div class="container">
+			<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+				<div class="col-first">
+					<h1>Product Details Page</h1>
+					<nav class="d-flex align-items-center">
+						<a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
+						<a href="#">Shop<span class="lnr lnr-arrow-right"></span></a>
+						<a href="single-product.html">product-details</a>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- End Banner Area -->
+
+	<!--================Single Product Area =================-->
+
+
+
+	<div class="product_image_area">
+		<div class="container">
+			<div class="row s_product_inner">
+				<div class="col-lg-6">
+					<div>
+                        <div class="single-prd-item">
+                                        <img class="img-fluid" src="{{images.0.image.url}}" style="position: relative;
+                                             width:  800px;
+                                             height: 400px;
+                                             background-position: 80% 80%;
+                                             background-repeat: no-repeat;
+                                             background-size: cover;
+                                             object-fit: contain;">
+							<br><br>
+                            <div class="row mb-5 thumbs">
+
+                            {% for image in images %}
+                                <div class="col-md-2">
+                                      <a href="{{ image.image.url }}" data-lightbox="home-images">
+                                        <img class="img-fluid"  src="{{ image.image.url }}" style="position: relative;
+                                            width:  300px;
+                                            height: 200px;
+                                            background-position: 80% 80%;
+                                            background-repeat: no-repeat;
+                                            background-size: cover;
+                                            object-fit: contain;">
+                                      </a>
+                                </div>
+                            {% endfor %}
+                            </div>
+						</div>
+					</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				</div>
+				<div class="col-lg-5 offset-lg-1" style="margin-top:-4%;">
+   <div class="s_product_text">
+      <h3>{{object.name}}</h3>
+      <h2>₹ &nbsp;{{object.price}}</h2>
+      <ul class="list">
+         <!-- Set category a link to go to -->
+         <li><span>Category&nbsp;&nbsp;&nbsp;:</span>&nbsp;&nbsp; <span style="color:#fd7e14;">{{object.category}}</span></li>
+         <!-- Set availability to in or out of stock once done -->
+         <li><span>Availibility :</span>
+                            {% if object.quantity %}
+                               &nbsp; <span style="color:#fd7e14;">In Stock</span>
+                            {% else %}
+               &nbsp; <span style="color:#fd7e14;">Out of Stock</span>
+                            {% endif %}
+                            </li>
+      </ul>
+      <hr>
+      <div>{{object.description}}</div>
+
+
+
+
+
+
+      <div>
+                     <div style="">Available Colors:</div>
+                  {% if colors %}
+                  <div>
+                     {% for color in colors %}
+                  <label>
+  <input type="radio" name="color-radio" value="{{color.color}}" checked style="visibility:hidden" class="color-radio-class">
+  <div style="width:25px;height:25px;background:{{color.color}};border:2px solid grey"></div>
+</label>
+                     {% endfor %}
+                     </div>
+                     <br>
+                     <span id="selected-color-text" style="color:#fd7e14;">Selected Color: {{colors.0.color}}</span>
+                  {% endif %}<br>
+
+                     </div>
+
+
+
+
+
+
+
+      <br>
+      <div class="product_count">
+
+         <label for="qty">Quantity:</label>
+         <input type="text" readonly name="qty" id="sst" maxlength="12" value="1" title="Quantity:">
+         <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst < 3 ) result.value++;return false;"
+          class="increase items-count"  type="button"><i style="color:red;" class="lnr lnr-chevron-up"></i></button>
+         <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 1 ) result.value--;return false;"
+          class="reduced items-count" type="button"><i style="color:red;"class="lnr lnr-chevron-down"></i></button>
+      </div>
+      <br>
+      <span style="color:red; font-size:12px;">The maximum amount allowed per user is 3</span><br><br>
+      <form class="card_area d-flex align-items-center" method="post" action="{% url 'products:product_add' object.id %}">
+                        {% csrf_token %}
+                        <input type="button" class="primary-btn" value="Add To Cart" name="cart-btn" onclick="add_function({{object.id}}, 'cart')">
+                        <button title="Add to Wishlist" type="button" class="icon_btn" value="Add To Wishlist" name="wishlist-btn" onclick="add_function({{object.id}}, 'wishlist')">
+                            <i class="lnr lnr lnr-heart"></i>
+         </button>
+      </form>
+
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--================End Single Product Area =================-->
+
+	<!--================Product Description Area =================-->
+	<section class="product_description_area">
+		<div class="container">
+			<ul class="nav nav-tabs" id="myTab" role="tablist">
+				<li class="nav-item">
+					<a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
+					 aria-selected="false">Specification</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" id="review-tab" data-toggle="tab" href="#review" role="tab" aria-controls="review"
+					 aria-selected="false">Reviews</a>
+				</li>
+			</ul>
+			<div class="tab-content" id="myTabContent">
+				<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+					<div class="table-responsive">
+						<table class="table">
+                            {% if attributes %}
+                            {% for attribute in attributes %}
+                                <tbody>
+								<tr>
+									<td>
+										<h5>{{attribute.attribute}}</h5>
+									</td>
+									<td>
+										<h5>{{attribute.value}}</h5>
+									</td>
+								</tr>
+							</tbody>
+                            {% endfor %}
+                            {% else %}
+							<tbody>
+								<tr>
+									<td>
+										<h5>Product Information</h5>
+									</td>
+									<td>
+										<h5>No Information Given</h5>
+									</td>
+								</tr>
+							</tbody>
+                            {% endif %}
+						</table>
+					</div>
+				</div>
+
+				<div class="container" id="review" role="tabpanel" aria-labelledby="review-tab" style="padding-top:10px">
+					<div class="row">
+
+						<div class="col-lg-6">
+							{% if reviews %}
+
+								{% for review in reviews %}
+
+      <div class="review_item">
+         <div class="media">
+            <div class="d-flex">
+               <h6>Posted By: <strong>{{review.customer_name}}</strong>,  <weak>{% day_differ review.posted_date %} Days Ago</weak></h6>
+            </div>
+         </div>
+         <p>{{review.message}}</p>
+      </div>
+							{% endfor %}
+
+							{% else %}
+
+							<h4>NO REVIEW HAS BEEN POSTED FOR THIS ITEM</h4>
+
+							{% endif %}
+
+   </div>
+
+						<div class="col-lg-6">
+
+							{% if can_post_review %}
+   <div class="review_box">
+      <h4>Add a Review</h4>
+      <form class="row contact_form" method="post" id="review-form">
+         '{% csrf_token %}'
+         <div class="col-md-12">
+            <div class="form-group">
+               <textarea class="form-control" name="message" id="review-message" rows="1" placeholder="Review" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Review'"></textarea></textarea>
+            </div>
+         </div>
+         <div class="col-md-12 text-right">
+            <button type="submit" value="submit" class="primary-btn">Submit Now</button>
+         </div>
+      </form>
+   </div>
+   {% endif %}
+						</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!--================End Product Description Area =================-->
+
+	<!-- Start related-product Area -->
+	<!--<section class="related-product-area section_gap_bottom">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-lg-6 text-center">
+					<div class="section-title">
+						<h1>Deals of the Week</h1>
+						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore
+							magna aliqua.</p>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-9">
+					<div class="row">
+						<div class="col-lg-4 col-md-4 col-sm-6 mb-20">
+							<div class="single-related-product d-flex">
+								<a href="#"><img src="img/r1.jpg" alt=""></a>
+								<div class="desc">
+									<a href="#" class="title">Black lace Heels</a>
+									<div class="price">
+										<h6>$189.00</h6>
+										<h6 class="l-through">$210.00</h6>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-6 mb-20">
+							<div class="single-related-product d-flex">
+								<a href="#"><img src="img/r2.jpg" alt=""></a>
+								<div class="desc">
+									<a href="#" class="title">Black lace Heels</a>
+									<div class="price">
+										<h6>$189.00</h6>
+										<h6 class="l-through">$210.00</h6>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-6 mb-20">
+							<div class="single-related-product d-flex">
+								<a href="#"><img src="img/r3.jpg" alt=""></a>
+								<div class="desc">
+									<a href="#" class="title">Black lace Heels</a>
+									<div class="price">
+										<h6>$189.00</h6>
+										<h6 class="l-through">$210.00</h6>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-6 mb-20">
+							<div class="single-related-product d-flex">
+								<a href="#"><img src="img/r5.jpg" alt=""></a>
+								<div class="desc">
+									<a href="#" class="title">Black lace Heels</a>
+									<div class="price">
+										<h6>$189.00</h6>
+										<h6 class="l-through">$210.00</h6>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-6 mb-20">
+							<div class="single-related-product d-flex">
+								<a href="#"><img src="img/r6.jpg" alt=""></a>
+								<div class="desc">
+									<a href="#" class="title">Black lace Heels</a>
+									<div class="price">
+										<h6>$189.00</h6>
+										<h6 class="l-through">$210.00</h6>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-6 mb-20">
+							<div class="single-related-product d-flex">
+								<a href="#"><img src="img/r7.jpg" alt=""></a>
+								<div class="desc">
+									<a href="#" class="title">Black lace Heels</a>
+									<div class="price">
+										<h6>$189.00</h6>
+										<h6 class="l-through">$210.00</h6>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-6">
+							<div class="single-related-product d-flex">
+								<a href="#"><img src="img/r9.jpg" alt=""></a>
+								<div class="desc">
+									<a href="#" class="title">Black lace Heels</a>
+									<div class="price">
+										<h6>$189.00</h6>
+										<h6 class="l-through">$210.00</h6>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-6">
+							<div class="single-related-product d-flex">
+								<a href="#"><img src="img/r10.jpg" alt=""></a>
+								<div class="desc">
+									<a href="#" class="title">Black lace Heels</a>
+									<div class="price">
+										<h6>$189.00</h6>
+										<h6 class="l-through">$210.00</h6>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-6">
+							<div class="single-related-product d-flex">
+								<a href="#"><img src="img/r11.jpg" alt=""></a>
+								<div class="desc">
+									<a href="#" class="title">Black lace Heels</a>
+									<div class="price">
+										<h6>$189.00</h6>
+										<h6 class="l-through">$210.00</h6>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3">
+					<div class="ctg-right">
+						<a href="#" target="_blank">
+							<img class="img-fluid d-block mx-auto" src="img/category/c5.jpg" alt="">
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>-->
+	<!-- End related-product Area -->
+<script src="https://code.jquery.com/jquery-1.12.4.js" integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU=" crossorigin="anonymous"></script>
+
+<script>
+$('.color-radio-class').click(function()
+{
+   $('#selected-color-text').text('Selected Color: '+$("input[name='color-radio']:checked").val())
+})
+
+$('#profile-tab').click(function()
+{
+
+$('#review').hide()
+
+$('#review-tab').click(function()
+{
+	$('#review').show()
+})
+
+})
+$('#review-form').submit(function(event){
+	event.preventDefault()
+	token = '{{ csrf_token }}'
+	text = $('#review-message').val()
+	$.ajax({
+			headers: {"X-CSRFToken": token},
+			url: "{% url 'orders:post_review' object.id %}",
+			data: {'message':text},
+			type: 'POST',
+			beforeSend: function()
+         {
+            $('#myLoader').removeAttr('hidden')
+            $('#total-screen').css('opacity',0.2)
+            setTimeout(function()
+            {
+                $('#total-screen').css('opacity',1)
+                $("#myloader").hide()
+            }
+            ,3000)
+
+         },
+         success: setTimeout(function(response) {
+                    window.location.href = "{% url 'products:product_detail' object.slug %}"
+
+                }, 3000),
+                error: function(error) {
+                    console.log(error);
+                }
+               })
+})
+
+
+function add_function(object_id, button)
+{
+	var token = '{{ csrf_token }}'
+	var quantity = document.getElementById('sst').value
+	$.ajax({
+			headers: {"X-CSRFToken": token},
+			url: '/product/add/'+object_id,
+			data: {'quantity':quantity,
+					'button':button},
+			type: 'GET',
+			success: function(response) {
+			$('#total-screen').css('opacity',0.2)
+$('#response_message').text(response)
+
+if(response == 'Item Added To Wishlist Successfully')
+{
+    $('#response_image').attr('src',"{% static '/img/true.gif'%}")
+}
+else if(response == 'Item Added To Cart Successfully')
+{
+	console.log($('#cart_count').text())
+
+	$('#cart_count').text(parseInt($('#cart_count').text())+1)
+    $('#response_image').attr('src',"{% static '/img/true.gif'%}")
+}
+else
+{
+    $('#response_image').attr('src',"{% static '/img/false.gif'%}")
+}
+
+$('#myModal').fadeIn('slow')
+$("#myModal").delay(1500).fadeOut('slow', function()
+{
+$('#total-screen').css('opacity',1)
+})
+			},
+			error: function(error) {
+				console.log(document.getElementById('sst').value)
+				console.log(error)
+			}
+});
+}
+</script>
+<script src="{% static 'js/lightbox.min.js' %}"></script>
+{% endblock %}
+{% block scroll_js %}
+<script type="text/javascript">
+    $("html,body").scrollTop(320);
+</script>
+{% endblock scroll_js %}

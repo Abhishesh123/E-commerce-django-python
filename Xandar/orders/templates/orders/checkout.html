@@ -1,0 +1,427 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load multiply_filter %}
+{% block content %}
+<div id="content-div">
+<section class="banner-area organic-breadcrumb">
+        <div class="container">
+            <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+                <div class="col-first">
+                    <h1>Checkout</h1>
+                    <nav class="d-flex align-items-center">
+                        <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
+                        <a href="single-product.html">Checkout</a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Banner Area -->
+
+    {% if orders %}
+<section class="checkout_area section_gap">
+    {% if addresses %}
+    <div class="container">
+        <div class="check_title">
+
+                    <h2>Saved Addresses</h2>
+                </div>
+        <div class="row">
+                {% for address in addresses %}
+            <div class="column col-lg-6">
+                <div class="container" style="margin-top:10px;height:135px;background-color:#f7f7f7; ">
+                    <div style="width:75%;float:left; margin-top:5px" class="col-lg-10 col-sm-4">
+                            <h5>Name: <span class="text-muted" >{{address.receiver_name}}</span></h5>
+                            <h5>Address: <span class="text-muted" >{{address.street_address}}, {{address.city}}, {{address.state}}</span></h5>
+                            <h5>PIN Code: <span class="text-muted" >{{address.pincode}}</span></h5>
+                            <h5>Phone Number: <span class="text-muted" >{{address.phone_number}}</span></h5>
+                    </div>
+                    <div style="width:25%;float:left;margin-top:10px" class="col-lg-2 col-sm-4">
+
+                        <button class="btn btn-warning" id="{{address.id}}">Deliver Here</button>
+                    </div>
+                </div>
+                </div>
+                {% endfor %}
+            </div>
+            </div>
+    <br>
+    {% endif %}
+        <div class="container">
+            <div class="cupon_area">
+                <div class="check_title">
+                    <h2>Have a coupon?</h2>
+                </div>
+                <input type="text" placeholder="Enter coupon code" id="coupon-value" autocomplete="off">
+                <div class="error" id="err-msg" style="color:red; position:relative; padding-left:30px;"></div>
+                <button class="tp_btn" id="apply-coupon-btn">Apply Coupon</button>
+                <button class="tp_btn" id="remove-coupon-btn">Remove Coupon</button>
+            </div>
+            <div class="billing_details">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <h3>Billing Details</h3>
+
+                        <form class="row contact_form" action="#" method="post">
+                            <div class="col-md-6 form-group p_star">
+                                <h6>Name:</h6>
+                                <input type="text" class="form-control" id="name-value" name="name-value" required>
+                                <span class="error" id="name-error" style="color:red"></span>
+                            </div>
+                            <div class="col-md-6 form-group p_star">
+                                <h6>Phone Number:</h6>
+                                <input type="text" class="form-control" id="phone-value" name="name-value" required pattern="^[7-9][0-9]{9}$" maxlength=10>
+                                <span class="error" id="phone-error" style="color:red"></span>
+                            </div>
+                            <div class="col-md-12 form-group p_star">
+                                <h6>Address 1:</h6>
+                                <input type="text" class="form-control" id="address-1-value" name="name" required>
+                                <span class="error" id="address-error" style="color:red"></span>
+                            </div>
+                            <div class="col-md-12 form-group p_star">
+                                <h6>Address 2:</h6>
+                                <input type="text" class="form-control" id="address-2-value" name="name">
+                            </div>
+                            <div class="col-md-6 form-group p_star">
+                                <h6>City:</h6>
+                                <input type="text" class="form-control" id="city-value" name="name" required>
+                                <span class="error" id="city-error" style="color:red"></span>
+                            </div>
+                            <div class="col-md-6 form-group p_star">
+                                <h6>PIN Code:</h6>
+                                <input type="text" class="form-control" id="pin-value" name="name" required pattern="^[1-9][0-9]{5}$">
+                                <span class="error" id="pin-error" style="color:red"></span>
+                            </div>
+                            <div class="col-md-6 form-group p_star">
+                                <h6>State:</h6>
+                                <select class="country_select" id="state-value">
+                                    <option value="Delhi">Delhi</option>
+                                    <option value="Noida">Noida</option>
+                                    <option value="Ghaziabad">Ghaziabad</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12 form-group">
+                                <strong>Choose one of the payment methods to confirm the payment and place order.</strong>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="order_box">
+                            <h2>Your Order</h2>
+                            <ul class="list">
+                                <li><a href="#">Product <span>Total</span></a></li>
+                                {% for order in orders %}
+                                <li><a href="#">{{order.product.name}} <strong>x</strong> {{order.quantity}}</span> <span class="last">₹{% multiply order.product.price order.quantity%}</span></a></li>
+                                {% endfor %}
+                            </ul>
+                            <ul class="list list_2">
+                                <li><a href="#" disabled="True">Coupon Applied<span id="coupon-applied">None</span></a></li>
+                                <li style="display:none" id="total-before-display"><a href="#">Total (Before Coupon) <span id="total-amount-before">₹{% total orders %}</span></a></li>
+                                <li style="display:none" id="total-after-display"><a href="#">Total (After Coupon) <span id="total-amount">₹{% total orders %}</span></a></li>
+                                <li id="total-initial"><a href="#">Total <span id="total-amount-initial">₹{% total orders %}</span></a></li>
+                            </ul>
+                            Choose Payment Method:
+                            <div class="payment_item active">
+                                <div class="radion_btn">
+                                    <input type="radio" id="f-option1" name="selector" value="Cash on Delivery">
+                                    <label for="f-option1">Cash on Delivery</label>
+                                    <div class="check"></div>
+                                </div>
+                            </div>
+                            <div class="payment_item active">
+                                <div class="radion_btn">
+                                    <input type="radio" id="f-option2" name="selector" value="Debit/Credit Card">
+                                    <label for="f-option2">Debit/Credit Card</label>
+                                    <img src="{% static 'img/product/card.jpg' %}" alt="">
+                                    <div class="check"></div>
+                                </div>
+                            </div>
+                            <div class="payment_item active">
+                                <div class="radion_btn">
+                                    <input type="radio" id="f-option3" name="selector" value="Paypal">
+                                    <label for="f-option3">Paypal</label>
+                                    <img src="{% static 'img/product/card.jpg' %}" alt="">
+                                    <div class="check"></div>
+                                </div>
+                            </div>
+                            <div class="creat_account">
+                                <input type="checkbox" id="confirm-checkbox" name="selector">
+                                <label for="confirm-checkbox">I’ve read and accept the </label>
+                                <a href="#">terms & conditions*</a>
+                            </div>
+                            <h6 align="center">Please Accept the Terms and Conditions to proceed</h6>
+                            <button  id="confirm-payment-btn" class="primary-btn" style="width:290px" >
+                                Confirm Payment
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--================End Checkout Area =================-->
+</div>
+<script
+           src="https://code.jquery.com/jquery-3.4.1.min.js"
+           integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+           crossorigin="anonymous"></script>
+<script>
+
+$('#apply-coupon-btn').click(function(){
+
+var token = '{{ csrf_token }}'
+   var coupon = document.getElementById('coupon-value').value
+   var total = '{% total orders %}'
+   $.ajax({
+         headers: {"X-CSRFToken": token},
+         url: 'apply/',
+         data: {'coupon':coupon,
+                 'total':total},
+         type: 'GET',
+         success: function(response) {
+            $('#response_message').text(response)
+            if(response == 'Provide a valid Coupon Name')
+                {
+                    $('#response_image').attr('src', "{% static '/img/false.gif' %}")
+                    $('#myModal').fadeIn('slow')
+                    $("#myModal").delay(2500).fadeOut('slow', function()
+                        {
+                            $('#total-screen').css('opacity',1)
+                        })
+                }
+
+            else if(response == 'Invalid Coupon No Discount')
+                {
+                    $('#response_image').attr('src', "{% static '/img/false.gif' %}")
+                    $('#myModal').fadeIn('slow')
+                    $("#myModal").delay(2500).fadeOut('slow', function()
+                        {
+                            $('#total-screen').css('opacity',1)
+                        })
+                }
+
+            else if(response == 'Coupon Expired')
+                {
+                    $('#response_image').attr('src', "{% static '/img/false.gif' %}")
+                    $('#myModal').fadeIn('slow')
+                    $("#myModal").delay(2500).fadeOut('slow', function()
+                        {
+                            $('#total-screen').css('opacity',1)
+                        })
+                }
+
+            else
+                {
+                    document.getElementById('total-amount-before').innerHTML=$('#total-amount-before').text()
+                    document.getElementById('total-amount').innerHTML='₹'+response
+                    $('#total-before-display').show()
+                    $('#total-after-display').show()
+                    $('#total-initial').hide()
+
+                    document.getElementById('coupon-applied').innerHTML=coupon
+                }
+         },
+         error: function(error) {
+            console.log(error)
+         }
+});
+
+})
+
+
+$('#remove-coupon-btn').click(function(){
+
+    $('#coupon-value').val('')
+    $('#total-before-display').hide()
+    $('#total-after-display').hide()
+    $('#total-initial').show()
+     $('#coupon-applied').text('None')
+})
+
+$('#pin-value').change(function(){
+    pincode = document.getElementById('pin-value').value
+    if(!pincode.match("^[1-9][0-9]{5}$"))
+    {
+    document.getElementById('pin-error').innerHTML = 'Please enter a valid PIN Code, Ex-208010'
+    }
+    else
+    {
+    document.getElementById('pin-error').innerHTML = ''
+    }
+})
+$('#phone-value').change(function(){
+    phone_number = $('#phone-value').val()
+    if(!phone_number.match("^[7-9][0-9]{9}$"))
+    {
+        $('#phone-error').text('Not A valid number, Enter a valid phone number.')
+    }
+    else
+    {
+        $('#phone-error').text('')
+    }
+})
+ $("#confirm-payment-btn").click(function(){
+  console.log()
+  if (parseInt($('#confirm-checkbox:checkbox:checked').length)==0)
+  {
+    alert('Please Accept the terms and conditions to Proceed')
+  }
+ var radioValue = $("input[name='selector']:checked").val();
+ if (radioValue != 'on')
+ {
+    var state = ''
+    var phone_number = ''
+    var receiver_name = ''
+    var street_address = ''
+    var pincode = ''
+    city = ''
+    if ($('#phone-value').val())
+    {
+        phone_number = $('#phone-value').val()
+        $('#phone-error').text('')
+    }
+    else
+    {
+        $('#phone-error').text('Please Fill This Field')
+    }
+    if ($('#address-1-value').val())
+    {
+        street_address = $('#address-1-value').val()+' '+$('#address-2-value').val()
+        $('#address-error').text('')
+    }
+    else
+    {
+        $('#address-error').text('Please Fill This Field')
+    }
+    if ($('#pin-value').val())
+    {
+        pincode = $('#pin-value').val()
+        $('#pin-error').text('')
+    }
+    else
+    {
+        $('#pin-error').text('Please Fill This Field')
+    }
+    if ($('#city-value').val())
+    {
+        city = $('#city-value').val()
+        $('#city-error').text('')
+    }
+    else
+    {
+        $('#city-error').text('Please Fill This Field')
+    }
+    if ($('#name-value').val())
+    {
+        receiver_name = $('#name-value').val()
+        $('#name-error').text('')
+    }
+    else
+    {
+        $('#name-error').text('Please Fill This Field')
+    }
+    state = $('#state-value').val()
+    if (!phone_number == '' && !receiver_name == '' && !street_address == '' && !pincode == '' && !city == '')
+    {
+        var token = '{% csrf_token %}'
+        $.ajax({
+         headers: {"X-CSRFToken": token},
+         url: '/orders/place_order/',
+         data: {'phone_number':parseInt(phone_number),
+               'receiver_name':receiver_name,
+               'street_address':street_address,
+               'pincode':parseInt(pincode),
+               'state':state,
+               'city':city,
+               'payment':radioValue.toString(),
+               'total': $('#total-amount').text(),
+               },
+         type: 'GET',
+         beforeSend: function()
+         {
+            $('#myLoader').removeAttr('hidden')
+            $('#total-screen').css('opacity',0.2)
+            setTimeout(function()
+            {
+                $('#total-screen').css('opacity',1)
+                $("#myLoader").hide()
+            }
+            ,3000)
+
+         },
+         success: setTimeout(function(response) {
+                    window.location.href = '{% url 'orders:order_successful' %}'
+
+                }, 3000),
+                error: function(error) {
+                    console.log(error);
+                }
+        });
+    }
+ }
+ else
+ {
+    alert('Please check a payment method to Proceed')
+ }
+});
+
+$('#confirm-checkbox').change(function(){
+    console.log()
+    if($(this).prop("checked") == true){
+                console.log('True')
+                $('#confirm-payment-btn').removeAttr('disabled')
+            }
+            else if($(this).prop("checked") == false){
+                $('#confirm-payment-btn').attr('disabled','disabled')
+            }
+});
+$("button").click(function()
+{
+    var x = $(".billing_details").position();
+    console.log(x)
+
+$("html,body").animate({scrollTop:x.top-120},500);
+    console.log(this.id)
+    '{% for address in addresses %}'
+        if (this.id == parseInt({{address.id}}))
+        {
+        $('')
+        $('#name-value').val('{{address.receiver_name}}');
+        $('#city-value').val('{{address.city}}')
+        $('#address-1-value').val('{{address.street_address}}')
+        $('#phone-value').val('{{address.phone_number}}')
+        $('#pin-value').val('{{address.pincode}}')
+        $('#state-value').val('{{address.state}}')
+        }
+    '{% endfor %}'
+})
+</script>
+
+
+{% else %}
+<br>
+<div class="container">
+    <center>
+    <h3>Your Cart must be empty, please make sure you add something to your cart first</h3>
+<div class="checkout_btn_inner d-flex align-items-center" style="margin-left:40%">
+                <a class="primary-btn" href="{% url 'index' %}">Continue Shopping</a>&nbsp;&nbsp;&nbsp;
+            </div>
+        <br>
+    </center>
+
+</div>
+
+
+{% endif %}
+{% endblock %}
+{% block scroll_js %}
+<script type="text/javascript">
+    {% if orders %}
+        $("html,body").scrollTop(400);
+    {% else %}
+    $("html,body").scrollTop(200);
+
+    {% endif %}
+
+</script>
+{% endblock scroll_js %}

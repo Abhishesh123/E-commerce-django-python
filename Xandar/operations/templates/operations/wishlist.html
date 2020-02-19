@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div style="margin:auto; display:none; position:fixed; z-index:1; top:50%; left:40%;" class="ajaxProgress">
+            <img height="200px" width="200px" src="{% static 'img/loader.gif' %}" alt="loading"/>
+</div>
+    <!-- Start Banner Area -->
+    <section class="banner-area organic-breadcrumb">
+        <div class="container">
+            <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+                <div class="col-first">
+                    <h1>Your Wishlist</h1>
+                    <nav class="d-flex align-items-center">
+                        <a href="{% url 'accounts:registration' %}">Home<span class="lnr lnr-arrow-right"></span></a>
+                        <a href="#">Wishlist</a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section><br>
+    <!-- End Banner Area -->
+
+
+<section class="cart-area">
+   <div class="container">
+       <div class="row">
+          <div class="col-lg-12">
+                <form role="form" method="POST">
+                    {% csrf_token %}
+                    {% if error %}
+                        <div class="" style="background-color:#f7f7f7;" align="center"><br>
+                            <h3>{{error}}</h3><br>
+                            <a class="primary-btn" href="{% url 'index' %}">Continue Shopping</a><br><br>
+                        </div>
+                    {% else %}
+                    {% for item in items %}
+                    <div class="row" style="background-color:#f7f7f7;">
+                        <div class="col-lg-4 col-sm-6" style="margin-bottom: 13px;">
+                            <div class="" style="text-align:center; padding: 13px 0px 0px 0px;">
+                                <a href="{% url 'products:product_detail' item.0.product.slug %}">
+                                    <img style="border: 2px solid black; border-radius:10px;"
+                                        height="200px" width="200px" class="img-fluid" src="{{ item.1.url}}" alt="Image">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <div class="single-product" style="padding: 20px 0px 0px 0px;">
+                                <div class="product-details">
+                                    <h3>{{item.0.product.name.title }}</h3><hr color="#777777">
+                                    <div class="price">
+                                        <span>Price : </span>
+                                        <span>₹ {{ item.0.product.price }}</span>
+                                    </div><br>
+                                    <div class="price" style="position: absolute;">
+                                        <h6>Description</h6>
+                                        <div>{{ item.0.product.description }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6" style="padding: 20px 0px 0px 0px;">
+                            <div class="button-group-area mt-40" style="text-align:center">
+                                <a>
+                                    <button type="button" class="btn btn-primary"
+                                            style="margin-top:50px; width:70%;" onclick="add_cart({{item.0.product_id}})">Add to Cart</button>
+                                </a><br><br>
+                                    <button id="remove-btn" onclick="rem_item({{item.0.product_id}})" type="button"
+                                            class="btn btn-danger" style="width:70%;">Remove</button><br>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top:10px"></div>
+                    {% endfor %}
+                </form><br>
+          </div>
+            <div class="checkout_btn_inner d-flex align-items-center" style="margin-left:757px;">
+                <a class="primary-btn" href="{% url 'index' %}">Continue Shopping</a>&nbsp;&nbsp;&nbsp;
+                <a class="primary-btn" href="{% url 'operations:view_cart' %}">View your Cart</a>
+            </div>
+            {% endif %}
+       </div>
+   </div><br>
+
+</section>
+
+
+    <!--================End Cart Area =================-->
+<script
+src="https://code.jquery.com/jquery-1.12.4.js"
+integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU="
+crossorigin="anonymous"></script>
+
+
+<script>
+
+function rem_item(obj){
+
+    var token = '{{ csrf_token }}'
+     $.ajax({
+                headers: {"X-CSRFToken": token},
+                url: '/operations/delete-item/' + obj +'/',
+                data: {'id':obj},
+                type: 'POST',
+                beforeSend: function(){
+                        $('.ajaxProgress').show();
+                },
+                success: function(response) {
+                    window.location.reload();
+                    $(html).html(response);
+                },
+                complete: function(){
+                        $('.ajaxProgress').hide();
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+}
+
+function add_cart(obj)
+{
+    var token = '{{ csrf_token }}'
+     $.ajax({
+                headers: {"X-CSRFToken": token},
+                url: '/operations/wishlist/add_to_cart/' + obj +'/',
+                data: {'id':obj},
+                type: 'POST',
+                beforeSend: function(){
+                   $('.ajaxProgress').show();
+                },
+                success: function(response) {
+                    window.location.reload();
+                    $(html).html(response);
+                },
+                complete: function(){
+                    $('.ajaxProgress').hide();
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+}
+
+</script>
+
+
+
+{% endblock content %}
+
+{% block scroll_js %}
+<script type="text/javascript">
+    $("html,body").scrollTop(320);
+</script>
+{% endblock scroll_js%}
